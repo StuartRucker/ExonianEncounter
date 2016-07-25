@@ -203,25 +203,29 @@ app.post('/submitselects', isLoggedIn, function(req, res) {
     var collection = db.get("likes");
     getPeopleLeft(req.user._id.toString(), db.get("likes"), function(peopleLeft) {
         for (var i = 0; i < Math.min(ids.length, peopleLeft); i++) {
-            var criteria = {
-                subject: (req.user._id).toString(),
-                object: ids[i]
-            };
+            
+            var localId = ids[i];
+            (function(id){
+              collection.find({subject: (req.user._id).toString(),object: id}, {}, function(e, docs) {
+                var criteria = {
+                    subject: (req.user._id).toString(),
+                    object: id
+                };
+                 
+                  if (docs.length == 0) {
+                      criteria.on = true;
+                      collection.insert(criteria, function(err, result) {});
+                  } else {
+                      var newState = !docs[0].on;
 
-            collection.find(criteria, {}, function(e, docs) {
-                if (docs.length == 0) {
-                    criteria.on = true;
-                    collection.insert(criteria, function(err, result) {});
-                } else {
-                    var newState = !docs[0].on;
-
-                    collection.update(criteria, {
-                        $set: {
-                            "on": newState
-                        }
-                    }, function(err, result) {});
-                }
-            });
+                      collection.update(criteria, {
+                          $set: {
+                              "on": newState
+                          }
+                      }, function(err, result) {});
+                  }
+              });
+            })(localId);
 
         }
         res.redirect("/matches");
