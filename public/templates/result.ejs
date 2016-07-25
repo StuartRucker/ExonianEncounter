@@ -1,0 +1,42 @@
+<%for(var i = 0; i < obj.length; i ++){%>
+
+<div class = "row">
+   <div class="col-md-12">
+      <div class="well well-sm">
+         <div class="media">
+            <a class="pull-left" href="#">
+            <%if(obj[i].hasPhoto){%>
+               <img height="96px" width="68px" class="media-object" src="faces/<%=obj[i].id%>.png">
+            <%}else{%>
+               <img class="media-object" src="http://placehold.it/68x96">
+            <%}%>
+            </a>
+            <div style = "padding-left: 15px;margin-right: 80px;" class="media-body">
+               <h4 style = "margin-top: 10px;" class="media-heading"><%=obj[i].name%></h4>
+               
+               <%if(obj[i].email == "nsun@exeter.edu"){%>
+                  <small> "Nicky likes making memes, long emotional talks, and typing in s p a c e text. If your'e lucky, maybe this heartthrob will share some of his sentimental english narratives"
+                  </small>
+               <%}%>
+            </div>
+            <div class = "pull-right">
+            <% if(obj[i].selectStatus == "none"){%>
+               <button id="<%=obj[i]._id%>" type="button" data-toggle="<%if(obj[i].state){%>on<%}else{%>off<%}%>" class="btn btn-<%if(obj[i].state){%>primary<%}else{%>default<%}%>"><%if(obj[i].state){%>Selected<%}else{%>Select<%}%></button>
+            <% }else{%>
+                  <button id="<%=obj[i]._id%>" type="button" data-enabledtoggle="<%if(obj[i].selectStatus == "on"){%>on<%}else{%>off<%}%>" class="btn btn-<%if(obj[i].selectStatus == "on"){%>success<%}else{%>danger<%}%>"><%if(obj[i].selectStatus == "on"){%>Enabled<%}else{%>Disabled<%}%></button>
+            <% }%>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<%}%>
+
+<%if(obj.length == 0){%>
+               <div style = "margin-top: 20px; color:#cccccc;"class = "text-center" > 
+                     <span style = "font-size: 190px;color:#e6e6e6" class="glyphicon glyphicon-user" aria-hidden="true"></span><br>
+                        <span>No Results... Maybe he/she has a nickname. </span>
+                     </div>
+
+<%}%>

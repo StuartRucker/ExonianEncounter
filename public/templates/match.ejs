@@ -1,0 +1,28 @@
+<div class="well well-sm">
+         <div class="media">
+            <a class="pull-left" href="#">
+            <%if(hasPhoto){%>
+               <img height="96px" width="68px" class="media-object" src="faces/<%=id%>.png">
+            <%}else{%>
+               <img class="media-object" src="http://placehold.it/68x96">
+            <%}%>
+            </a>
+            <div style = "padding-left: 15px;margin-right: 80px;" class="media-body">
+               <h4 style = "margin-top: 10px;" class="media-heading"><%=name%></h4>
+
+                <% if(isMatch){ %>
+                <small class = "enablemessage <%=_id%>" style="display:<%if(selectStatus == "on"){%>inline<%}else{%>none<%}%>;">can see you have matched</small> 
+                 
+                  <small class = "disablemessage <%=_id%>" style="display:<%if(selectStatus == "off"){%>inline<%}else{%>none<%}%>;"> can not see you have matched</small> 
+                  <% } %>
+            </div>
+            <div class = "pull-right">
+            
+                  <button id="<%=_id%>" type="button" data-enabledtoggle="<%if(selectStatus == "on"){%>on<%}else{%>off<%}%>" class="btn btn-<%if(selectStatus == "on"){%>success<%}else{%>danger<%}%>"><%if(selectStatus == "on"){%>Enabled<%}else{%>Disabled<%}%></button>
+                 
+
+
+            
+            </div>
+         </div>
+      </div>
