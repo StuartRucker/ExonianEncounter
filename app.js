@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var request = require("request");
 
 var methodOverride = require('method-override'),
     session = require('express-session'),
@@ -13,6 +14,7 @@ var methodOverride = require('method-override'),
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/exonianencounter');
+
 
 
 
@@ -60,17 +62,39 @@ passport.use('local-signin', new LocalStrategy({
     },
     function(req, email, password, done) {
         var collection = db.get('people');
-        collection.find({
-            "email": email,
-            "password": password
-        }, {}, function(e, docs) {
+        
+        if(!email.includes("@exeter.edu")){
+            email += "@exeter.edu";
+        }
+        //first check if someone used the key generator
+        collection.find({"email": email,"password": password}, {}, function(e, docs) {
+            
             if (docs.length == 1) {
                 var ans = docs[0];
                 delete ans.password;
                 done(null, ans);
-            } else {
-                done(null, false);
+            } 
+
+            //if that doesn't work. Check if they used network password
+            else {
+                exeterAuth(email, password, function(valid){
+                    if(valid){
+                        collection.find({"email": email}, {}, function(e, docs) {
+                            if(docs.length == 1){
+                                var ans = docs[0];
+                                delete ans.password;
+                                done(null, ans);
+                            }else{
+                                done(null, false);
+                            }
+                        });
+                    }else{
+                        done(null, false);
+                    }
+                });
+                
             }
+        
         });
 
         // if (email == "bob@exeter.edu") {
@@ -392,6 +416,21 @@ function getPeopleLeft(id, collection, callback) {
     }, function(e, count) {
         callback(TOTAL_SELECTIONS - count);
     });
+}
+
+function exeterAuth(username, password, callback){
+    var url = "https://connect.exeter.edu/_layouts/images/datatel/help-sm.png",
+        auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+    request({
+        url : url,
+        headers : {
+            "Authorization" : auth
+        }
+    },
+    function (error, response, body) {
+        callback(response.statusCode == 200);
+    });
+
 }
 module.exports = app;
 

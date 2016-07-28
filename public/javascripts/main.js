@@ -1,4 +1,6 @@
 $( document ).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+  
   $('.search-input').keyup(function(e){
     if(e.keyCode == 13)
     {

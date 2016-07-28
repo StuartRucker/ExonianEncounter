@@ -5,8 +5,9 @@
       <!-- Optional theme -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-
+      
       <link href = "stylesheets/login.css">
+      
 </head>
 <body style = "background-color: #f2f2f2;padding-top: 12px;">
 
@@ -23,8 +24,24 @@
   <div  class="panel panel-default">
     <div class="panel-body">
   
-   <h3 class="form-signin-heading">Get Password</h3>
-  
+   
+<h2 style = "margin-top: 0px; margin-bottom: 15px" class="form-signin-heading">Sign in</h2>
+  <form class="form-signin" id="local-sign-in" action="/login" method="post">
+        
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input name = "email" type="text" id="inputEmail" class="form-control" placeholder="email@exeter.edu" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input name = "password" type="password" id="inputPassword" class="form-control" placeholder="Exeter Password or password key" required>
+        
+
+        <button style = "margin-top: 15px;"class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+<hr style = "margin-bottom: 30px;">
+    <h3 class="form-signin-heading">Get Password Key </h3>
+    <p>So I know its super sketchy to ask for your exeter password, since I could be phishing you. However, all I'm doing is testing if you could log into Exeter Connect. However, if your nervous about it, <b>enter your email and you'll get sent a new password key</b> to log in. But trust me, I'm not trying to get kicked out.</p>
+    
+    
    <form  action="/emailpass" method="post" >
    <div class="input-group">
       <input type="text" class="form-control" name = "email" placeholder="<% if(emailstatus == "noexist"){ %>No Email Found<% }else{ %>email@exeter.edu<% } %>">
@@ -42,18 +59,8 @@
     </div><!-- /input-group -->
     </form>
 
-<hr>
 
-  <form class="form-signin" id="local-sign-in" action="/login" method="post">
-        <h3 class="form-signin-heading">Sign in</h3>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input name = "email" type="text" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input name = "password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        
 
-        <button style = "margin-top: 15px;"class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
       </div>
   </div>
 </div>
