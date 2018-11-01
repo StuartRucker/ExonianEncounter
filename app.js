@@ -122,7 +122,7 @@ passport.use('local-signin', new LocalStrategy({
 
 //===============EXPRESS================
 
-app.listen(8080);
+app.listen(80);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('json spaces', 5);
