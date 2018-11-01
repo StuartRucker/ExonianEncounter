@@ -1,17 +1,17 @@
 var fs = require('fs');
-var cheerio = require('cheerio'); 
+var cheerio = require('cheerio');
 var request = require('request');
 
-fs.readFile( __dirname + '/daystud.html', function (err, data) {
+fs.readFile( __dirname + '/boarder.html', function (err, data) {
   if (err) {
-    throw err; 
+    throw err;
   }
   var htmlString= (data.toString());
 
 var downloader = [];
 var people = [];
 var $ = cheerio.load(htmlString);
-	
+
 	$('.psrch-results').children('.psrch-FullResult, .psrch-FirstFullResult').each(function () {
 		var $infoCard = $(this).children("#ContactInfo").children("#MiniContactCard");
 		var name = $infoCard.children("#NameField").children(".nameBlock").text();
@@ -35,10 +35,23 @@ var $ = cheerio.load(htmlString);
 			"hasPhoto": hasPhoto,
 			"photoURL": photoURL
 		});
-		
-		
+
+
 	});
-	console.log(people);
+
+  var MongoClient = require('mongodb').MongoClient;
+  var url = "mongodb://localhost:27017/";
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+
+    var dbo = db.db("exonianencounter");
+    var peopleconnection = dbo.collection("people");
+
+    peopleconnection.insert(people, function(a,b){});
+  });
+
+	// console.log(people);
 	// recursiveDownload(145, downloader);
 });
 
@@ -54,19 +67,15 @@ function recursiveDownload(index, ppl){
 var download = function(uri, filename, callback){
   var options = {
 	 "uri": uri,
-	  headers: {               
-	    'Authorization': 'Basic ' + new Buffer("srucker:Roadkill6").toString('base64')                  
+	  headers: {
+	    'Authorization': 'Basic ' + new Buffer("srucker:Roadkill6").toString('base64')
 	  },
 	  "timeout": 30000
 	};
 
 
- 
+
    request(options).pipe(fs.createWriteStream(filename)).on('close', callback);
 
 
 };
-
-
-
-

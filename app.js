@@ -62,39 +62,49 @@ passport.use('local-signin', new LocalStrategy({
     },
     function(req, email, password, done) {
         var collection = db.get('people');
-        
+
         if(!email.includes("@exeter.edu")){
             email += "@exeter.edu";
         }
+        console.log(email + " " + password);
         //first check if someone used the key generator
         collection.find({"email": email,"password": password}, {}, function(e, docs) {
-            
-            if (docs.length == 1) {
+            console.log("trying to authenticate")
+            if (e == null && docs.length == 1) {
                 var ans = docs[0];
                 delete ans.password;
                 done(null, ans);
-            } 
+            }
 
             //if that doesn't work. Check if they used network password
             else {
+                console.log("exeter authing")
                 exeterAuth(email, password, function(valid){
                     if(valid){
+                        console.log(email)
                         collection.find({"email": email}, {}, function(e, docs) {
-                            if(docs.length == 1){
-                                var ans = docs[0];
-                                delete ans.password;
-                                done(null, ans);
-                            }else{
-                                done(null, false);
+                            console.log("error:");
+                            console.log(e);
+                            console.log();
+                            console.log(docs);
+                            if(e == null){
+                              if(docs.length == 1){
+                                  var ans = docs[0];
+                                  delete ans.password;
+                                  done(null, ans);
+                              }else{
+                                  done(null, false);
+                              }
                             }
                         });
                     }else{
+                      console.log("exeter authing fail")
                         done(null, false);
                     }
                 });
-                
+
             }
-        
+
         });
 
         // if (email == "bob@exeter.edu") {
@@ -227,7 +237,7 @@ app.post('/submitselects', isLoggedIn, function(req, res) {
     var collection = db.get("likes");
     getPeopleLeft(req.user._id.toString(), db.get("likes"), function(peopleLeft) {
         for (var i = 0; i < Math.min(ids.length, peopleLeft); i++) {
-            
+
             var localId = ids[i];
             (function(id){
               collection.find({subject: (req.user._id).toString(),object: id}, {}, function(e, docs) {
@@ -235,7 +245,7 @@ app.post('/submitselects', isLoggedIn, function(req, res) {
                     subject: (req.user._id).toString(),
                     object: id
                 };
-                 
+
                   if (docs.length == 0) {
                       criteria.on = true;
                       collection.insert(criteria, function(err, result) {});
