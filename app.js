@@ -13,7 +13,7 @@ var methodOverride = require('method-override'),
 
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/exonianencounter');
+var db = monk('mongodb://srucker:Roadkill0@ds155243.mlab.com:55243/exonianencounter');
 
 
 
