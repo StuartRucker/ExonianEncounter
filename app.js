@@ -38,7 +38,7 @@ passport.deserializeUser(function(id, done) {
     collection.find({
         "_id": id
     }, {}, function(e, docs) {
-        if (docs.length == 1) {
+        if (e == null && docs.length == 1) {
             var ans = docs[0];
             delete ans.password;
             done(null, ans);
@@ -83,9 +83,6 @@ passport.use('local-signin', new LocalStrategy({
                     if(valid){
                         console.log(email)
                         collection.find({"email": email}, {}, function(e, docs) {
-                            console.log("error:");
-                            console.log(e);
-                            console.log();
                             console.log(docs);
                             if(e == null){
                               if(docs.length == 1){
